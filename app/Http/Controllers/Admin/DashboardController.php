@@ -19,6 +19,8 @@ class DashboardController extends Controller
         $todayDate = $today->toDateString();
         $monthStart = $today->copy()->startOfMonth()->toDateString();
         $monthEnd = $today->copy()->endOfMonth()->toDateString();
+        $previousMonthStart = $today->copy()->subMonthNoOverflow()->startOfMonth()->toDateString();
+        $previousMonthEnd = $today->copy()->subMonthNoOverflow()->endOfMonth()->toDateString();
 
         $range = $this->normalizeDashboardRange(trim((string) $request->input('range', 'today')));
         $fromDateInput = trim((string) $request->input('from_date', ''));
@@ -30,6 +32,7 @@ class DashboardController extends Controller
             'total_billings' => Billing::count(),
             'today_billings' => Billing::whereDate('order_date', $todayDate)->count(),
             'month_revenue' => (float) Billing::whereBetween('order_date', [$monthStart, $monthEnd])->sum('net_total'),
+            'previous_month_revenue' => (float) Billing::whereBetween('order_date', [$previousMonthStart, $previousMonthEnd])->sum('net_total'),
             'pending_balance' => (float) Billing::where('balance', '>', 0)->sum('balance'),
             'open_due_billings' => Billing::where('balance', '>', 0)->count(),
             'deliveries_due_today' => Billing::whereDate('delivery_date', $todayDate)->count(),

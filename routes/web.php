@@ -15,6 +15,7 @@ Route::post('/', [LoginController::class, 'login'])->name('login');
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+Route::get('/oo', fn() => Inertia::render('invoice/OpticalInvoice'))->name('optical.invoice');
 
 require __DIR__.'/admin.php';
 require __DIR__.'/staff.php';

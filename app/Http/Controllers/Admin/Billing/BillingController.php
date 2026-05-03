@@ -257,6 +257,7 @@ class BillingController extends Controller
             'frames.*.price' => ['required', 'numeric', 'min:0'],
             'lenses' => ['nullable', 'array'],
             'lenses.*.lensType' => ['required', 'string', 'max:255'],
+            'lenses.*.add' => ['nullable', 'string', 'max:255'],
             'lenses.*.price' => ['required', 'numeric', 'min:0'],
             'lenses.*.linkedLensIndex' => ['nullable', 'integer', 'min:1'],
             'lenses.*.right.sph' => ['nullable', 'string', 'max:255'],
@@ -369,6 +370,7 @@ class BillingController extends Controller
             BillingLens::create([
                 'billing_id' => $billingId,
                 'lens_type' => $lens['lensType'],
+                'add' => $this->normalizeLensAdd(data_get($lens, 'add')),
                 'price' => $lens['price'],
                 'right_sph' => $rightEye['sph'],
                 'right_cyl' => $rightEye['cyl'],
@@ -406,6 +408,7 @@ class BillingController extends Controller
             ])->values()->all(),
             'lenses' => $billing->lenses->map(fn (BillingLens $lens): array => [
                 'lensType' => $lens->lens_type,
+                'add' => $lens->add ?? '',
                 'price' => (string) $lens->price,
                 'linkedLensIndex' => $lens->linked_to_index ? (string) $lens->linked_to_index : '',
                 'right' => [
@@ -445,6 +448,7 @@ class BillingController extends Controller
             ])->values()->all(),
             'lenses' => $billing->lenses->map(fn (BillingLens $lens): array => [
                 'lens_type' => $lens->lens_type,
+                'add' => $lens->add,
                 'price' => (string) $lens->price,
                 'is_linked' => (bool) $lens->is_linked,
                 'linked_to_index' => $lens->linked_to_index,
@@ -468,6 +472,13 @@ class BillingController extends Controller
             'axis' => trim((string) ($eye['axis'] ?? '')),
             'va' => trim((string) ($eye['va'] ?? '')),
         ];
+    }
+
+    private function normalizeLensAdd(mixed $add): ?string
+    {
+        $value = trim((string) ($add ?? ''));
+
+        return $value !== '' ? $value : null;
     }
 
     private function resolveLinkedPrescription(array $rightEye, array $leftEye): array

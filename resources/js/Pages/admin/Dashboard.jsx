@@ -1,6 +1,6 @@
 import AdminLayout from "@/Layouts/AdminLayout"
 import { Link } from "@inertiajs/react"
-import { ArrowRight, CalendarDays, ClipboardList, TrendingUp, Wallet } from "lucide-react"
+import { ArrowRight, CalendarDays, ClipboardList, Wallet } from "lucide-react"
 
 import { ChartAreaInteractive } from "./chart/ChartAreaInteractive"
 import { Badge } from "@/components/ui/badge"
@@ -107,13 +107,6 @@ function Dashboard({
       icon: Wallet,
       accentClass: "bg-gradient-to-r from-rose-500 to-pink-400",
     },
-    {
-      title: "Average Order",
-      value: formatCurrency(metrics.average_order_value),
-      helper: "Average net billing value",
-      icon: TrendingUp,
-      accentClass: "bg-gradient-to-r from-amber-500 to-orange-400",
-    },
   ]
 
   const dueItems = Array.isArray(dueBillings) ? dueBillings : []
@@ -173,6 +166,10 @@ function Dashboard({
             <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur">
               <p className="text-xs uppercase tracking-[0.24em] text-slate-300">This month revenue</p>
               <p className="mt-3 text-2xl font-semibold text-white">{formatCurrency(metrics.month_revenue)}</p>
+              <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                <p className="text-[11px] uppercase tracking-[0.22em] text-slate-300">Previous month revenue</p>
+                <p className="mt-1 text-lg font-semibold text-white">{formatCurrency(metrics.previous_month_revenue)}</p>
+              </div>
               <div className="mt-4 space-y-3 text-sm text-slate-200">
                 <div className="flex items-center justify-between gap-4">
                   <span>Deliveries due today</span>

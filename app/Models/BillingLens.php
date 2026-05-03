@@ -9,6 +9,7 @@ class BillingLens extends Model
     protected $fillable = [
         'billing_id',
         'lens_type',
+        'add',
         'price',
         'right_sph',
         'right_cyl',

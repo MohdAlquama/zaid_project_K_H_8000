@@ -22,6 +22,7 @@ import {
   FileTextIcon,
   MessageSquareIcon,
   CalendarDays,
+  LogsIcon,
 } from "lucide-react"
 
 
@@ -38,9 +39,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { NavMain2 } from "./nav-main2"
+import { useAuth } from "@/context/AuthContext"
+
 
 const data = {
+  
   user: {
     name: "Admin User",
     email: "admin@example.com",
@@ -62,73 +65,42 @@ const data = {
       url: "/admin/view__/billing",
       icon: FileTextIcon,
     },
-      {
-      title: "Create Subjects",
-      url: "/admin/subjects",
-      icon: BookText,
-    },
-    {
-      title: "Academic",
-      url: "/admin/academic-year",
-      icon: FolderIcon,
-    },
-    {
-      title: "Teachers",
-      url: "/admin/teachers",
-      icon: UsersIcon,
-    },
  {
   title: "User / Staff Management",
   url: "/admin/create__/user/staff",
   icon: UsersIcon,
 },
-    {
-      title: "IdCard Settings",
-      url: "/admin/i-card-settings",
-      icon: IdCard,
-    },
+
   ],
 
 
 
 
   navSecondary: [
-    {
-      title: "Settings",
-      url: "/admin/settings",
-      icon: SettingsIcon,
-    },
+   
     {
       title: "Help",
       url: "/admin/help",
       icon: HelpCircleIcon,
     },
-    {
-      title: "Search",
-      url: "/admin/search",
-      icon: SearchIcon,
-    },
   ],
   documents: [
-    {
-      name: "Library",
-      url: "/admin/library",
-      icon: DatabaseIcon,
-    },
     {
       name: "Reports",
       url: "/admin/reports",
       icon: ClipboardListIcon,
     },
     {
-      name: "Assistant",
-      url: "/admin/assistant",
-      icon: FileIcon,
-    },
+  name: "System Logs",
+  url: "/admin/system.logs",
+  icon: LogsIcon,
+}
+  ,
   ],
 }
 
 export function AppSidebar(props) {
+    const { user } = useAuth()
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       
@@ -140,7 +112,7 @@ export function AppSidebar(props) {
               <Link href="/admin/dashboard">
                 <ArrowUpCircleIcon className="h-5 w-5" />
                 <span className="text-base font-semibold">
-                  ERP System
+                  Eye Care System
                 </span>
               </Link>
             </SidebarMenuButton>
@@ -157,7 +129,7 @@ export function AppSidebar(props) {
 
       {/* Footer */}
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
 
     </Sidebar>

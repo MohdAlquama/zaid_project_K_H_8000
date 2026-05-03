@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\Help\HelpController;
 use App\Http\Controllers\Admin\FinancialReportController;
 use App\Http\Controllers\Admin\Billing\BillingController;
+use App\Http\Controllers\Admin\Session\SystemLogsController;
 use App\Http\Controllers\Admin\UserStaffController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -14,9 +16,14 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/reports', [FinancialReportController::class, 'index'])->name('reports.index');
+        Route::get('/help', [HelpController::class, 'index'])->name('help');
         Route::get('/b', function () {
             return Inertia::render('admin/OpticalBill');
         })->name('optical-bill');
+        Route::get('/system.logs', [SystemLogsController::class, 'index'])->name('system-logs.index');
+        Route::post('/system.logs/delete-selected', [SystemLogsController::class, 'destroySelected'])->name('system-logs.destroy-selected');
+        Route::delete('/system.logs', [SystemLogsController::class, 'destroyAll'])->name('system-logs.destroy-all');
+        Route::delete('/system.logs/{sessionId}', [SystemLogsController::class, 'destroy'])->name('system-logs.destroy');
 
         
         Route::get('/create__/billing', [BillingController::class, 'index'])->name('create-billing');

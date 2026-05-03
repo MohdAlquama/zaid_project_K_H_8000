@@ -20,6 +20,7 @@ const emptyDueSummary = { total_due: 0, billings: [] }
 
 const createEmptyLens = () => ({
   lensType: "",
+  add: "",
   price: "",
   linkedLensIndex: "",
   right: { sph: "", cyl: "", axis: "", va: "" },
@@ -118,6 +119,7 @@ const buildFormData = (billing = null) => ({
   lenses: billing?.lenses?.length
     ? billing.lenses.map((lens) => ({
         lensType: lens.lensType ?? "",
+        add: lens.add ?? "",
         price: lens.price ?? "",
         linkedLensIndex: lens.linkedLensIndex ?? "",
         right: {
@@ -775,7 +777,7 @@ export default function BillingForm({ mode = "create", billing = null }) {
                 </div>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-3">
                 <div>
                   <Label>Lens Type</Label>
                   <Input
@@ -786,6 +788,18 @@ export default function BillingForm({ mode = "create", billing = null }) {
                     }
                   />
                   <InputError message={errors[`lenses.${index}.lensType`]} className="mt-1" />
+                </div>
+
+                <div>
+                  <Label>ADD</Label>
+                  <Input
+                    placeholder="e.g. +1.50"
+                    value={lens.add}
+                    onChange={(event) =>
+                      handleLensChange(index, "add", null, event.target.value)
+                    }
+                  />
+                  <InputError message={errors[`lenses.${index}.add`]} className="mt-1" />
                 </div>
 
                 <div>
