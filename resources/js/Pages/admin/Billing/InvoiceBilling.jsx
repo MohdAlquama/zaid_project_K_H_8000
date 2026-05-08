@@ -41,11 +41,7 @@ const getLinkedLensName = (lens, lenses) => {
 
 const getLensLabel = (lens, lenses) => {
   const linkedName = getLinkedLensName(lens, lenses);
-  const addValue = formatValue(lens.add);
-  const lensName =
-    addValue !== "-"
-      ? `${formatValue(lens.lens_type)} ADD ${addValue}`
-      : formatValue(lens.lens_type);
+  const lensName = formatValue(lens.lens_type);
   return linkedName ? `${lensName} - Linked with ${linkedName}` : lensName;
 };
 
