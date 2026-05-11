@@ -18,6 +18,12 @@ const formatMoney = (value) => Number(value || 0).toFixed(2);
 
 const hasAmount = (value) => Number(value || 0) > 0;
 
+const formatDate = (value) => {
+  const text = `${value ?? ""}`.trim();
+  const match = text.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return match ? `${match[3]}-${match[2]}-${match[1]}` : value;
+};
+
 function DetailBox({ label, value }) {
   return (
     <div className="min-h-[34px] border border-black px-2 py-1 break-words [overflow-wrap:anywhere]">
@@ -289,8 +295,8 @@ function InvoiceBilling({ billing }) {
   const customerName = billing?.customer_name;
   const customerNumber = billing?.mobile_number;
   const orderNumber = billing?.order_number;
-  const orderDate = billing?.order_date;
-  const deliveryDate = billing?.delivery_date;
+  const orderDate = formatDate(billing?.order_date);
+  const deliveryDate = formatDate(billing?.delivery_date);
 
   const lenses = billing?.lenses || [];
 
