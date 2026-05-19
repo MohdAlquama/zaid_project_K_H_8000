@@ -7,6 +7,8 @@ const terms = [
   "Orders will be treated as cancelled if advance payment is not made.",
 ];
 
+const logoSrc = "/assets/logo1.png";
+
 const formatValue = (value) => {
   const text = `${value ?? ""}`.trim();
   return text !== "" ? text : "-";
@@ -114,7 +116,7 @@ function LensTable({ lenses }) {
                 <th className="border border-black p-1">SPH</th>
                 <th className="border border-black p-1">CYL</th>
                 <th className="border border-black p-1">AXIS</th>
-                <th className="border border-black p-1">VA</th>
+                <th className="border border-black p-1">VN</th>
               </tr>
             </thead>
             <tbody>
@@ -238,15 +240,24 @@ function InvoiceCopy({
 }) {
   return (
     <section className="min-w-0 px-4 py-2 text-black">
-      <div className="text-center leading-tight">
-        <p className="text-base font-bold">Bhairahawa Eye Care & Optical</p>
-        <p className="mt-1 text-[10px] font-semibold">
-          Phone No.: 8052595575, 9648277796
-        </p>
-        <p className="mt-0.5 text-[9px]">
-          Roadways ke saamne, Mehndawal, District Sant Kabir Nagar
-        </p>
-        <p className="mt-1 text-[10px] font-bold uppercase">{copyLabel}</p>
+      <div className="grid grid-cols-[23mm_1fr] items-center gap-2 leading-tight">
+        <div className="flex h-[18mm] w-[23mm] items-center justify-center overflow-hidden">
+          <img
+            src={logoSrc}
+            alt="Bhairahawa Eye Care & Optical logo"
+            className="h-full w-full object-contain"
+          />
+        </div>
+        <div className="text-center">
+          <p className="text-base font-bold">Bhairahawa Eye Care & Optical</p>
+          <p className="mt-1 text-[10px] font-semibold">
+            Phone No.: 8052595575, 9648277796
+          </p>
+          <p className="mt-0.5 text-[9px]">
+  <strong>Mehdawal</strong> Bus Stand Ke Samne, District Sant Kabir Nagar
+</p>
+          <p className="mt-1 text-[10px] font-bold uppercase">{copyLabel}</p>
+        </div>
       </div>
 
       <div className="my-2 border-t-2 border-black" />
@@ -312,39 +323,56 @@ function InvoiceBilling({ billing }) {
     documentTitle: `Invoice-${formatValue(orderNumber)}`,
     pageStyle: `
       @page {
-        size: A5 landscape;
-        margin: 0mm 2mm;
+        size: A4 portrait;
+        margin: 0;
       }
 
       @media print {
-        html, body {
+        html,
+        body {
+          width: 210mm !important;
+          margin: 0 !important;
+          padding: 0 !important;
           background: #ffffff !important;
+          overflow: visible !important;
         }
 
         body {
           -webkit-print-color-adjust: exact !important;
           print-color-adjust: exact !important;
           color-adjust: exact !important;
+          transform: scale(1) !important;
+          transform-origin: top left !important;
+          zoom: 1 !important;
         }
 
         * {
           -webkit-print-color-adjust: exact !important;
           print-color-adjust: exact !important;
+          box-sizing: border-box !important;
         }
 
         .invoice-paper {
           box-shadow: none !important;
           margin: 0 !important;
-          width: 100% !important;
-          min-height: 148mm !important;
+          width: 200mm !important;
+          max-width: 200mm !important;
+          min-height: 0 !important;
+          padding: 2mm 2mm 2mm 4mm !important;
+          transform: scale(1) !important;
+          transform-origin: top left !important;
+          zoom: 1 !important;
         }
 
         .print-cut-line {
           border-left: 1px dashed #000000 !important;
+          left: 50.5% !important;
         }
 
         table {
           border-collapse: collapse !important;
+          page-break-inside: avoid !important;
+          break-inside: avoid !important;
         }
 
         table, th, td {
@@ -355,9 +383,14 @@ function InvoiceBilling({ billing }) {
           background-color: #f3f4f6 !important;
         }
 
-        table, .avoid-break {
-          page-break-inside: avoid;
-          break-inside: avoid;
+        thead,
+        tbody,
+        tr,
+        th,
+        td,
+        .avoid-break {
+          page-break-inside: avoid !important;
+          break-inside: avoid !important;
         }
 
         .invoice-paper {
@@ -390,7 +423,11 @@ function InvoiceBilling({ billing }) {
       <div
         ref={printRef}
         className="invoice-paper relative mx-auto grid grid-cols-2 bg-white text-black shadow-md"
-        style={{ width: "210mm", minHeight: "148mm" }}
+        style={{
+          width: "200mm",
+          minHeight: 0,
+          padding: "2mm 2mm 2mm 4mm",
+        }}
       >
         <InvoiceCopy
           customerName={customerName}
@@ -408,7 +445,7 @@ function InvoiceBilling({ billing }) {
           copyLabel="Customer Copy"
         />
 
-        <div className="print-cut-line absolute left-1/2 top-0 h-full -translate-x-1/2 border-l border-dashed border-black" />
+        <div className="print-cut-line absolute left-[50.5%] top-0 h-full -translate-x-1/2 border-l border-dashed border-black" />
 
         <InvoiceCopy
           customerName={customerName}
