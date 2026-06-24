@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\Help\HelpController;
 use App\Http\Controllers\Admin\FinancialReportController;
 use App\Http\Controllers\Admin\Billing\BillingController;
+use App\Http\Controllers\Admin\InvoiceControlController;
 use App\Http\Controllers\Admin\Session\SystemLogsController;
 use App\Http\Controllers\Admin\UserStaffController;
 use Illuminate\Support\Facades\Route;
@@ -43,5 +44,8 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/user/staff/{user}/edit', [UserStaffController::class, 'edit'])->name('user-staff.edit');
         Route::put('/user/staff/{user}', [UserStaffController::class, 'update'])->name('user-staff.update');
         Route::delete('/user/staff/{user}', [UserStaffController::class, 'destroy'])->name('user-staff.destroy');
+        // Route::get('/invoice-control_customizable', [InvoiceControlController::class, 'index'])->name('invoice-control.index');
+        Route::get('/invoice-control', [InvoiceControlController::class, 'index'])->name('invoice-control.index');
+        Route::post('/invoice-control', [InvoiceControlController::class, 'store'])->name('invoice-control.store');
 
     }); 

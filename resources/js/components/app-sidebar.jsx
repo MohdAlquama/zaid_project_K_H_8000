@@ -69,7 +69,11 @@ const data = {
   title: "User / Staff Management",
   url: "/admin/create__/user/staff",
   icon: UsersIcon,
-},
+},{
+title: "Invoice Settings",
+url: "/admin/invoice-control",
+icon: Settings2,
+}
 
   ],
 

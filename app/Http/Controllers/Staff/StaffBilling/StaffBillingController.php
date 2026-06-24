@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Billing;
 use App\Models\BillingFrame;
 use App\Models\BillingLens;
+use App\Models\InvoiceControl;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -200,10 +201,11 @@ class StaffBillingController extends Controller
     public function invoice(Request $request, Billing $billing): Response
     {
         $billing->load(['frames', 'lenses']);
-
+  $settings = InvoiceControl::first() ?? new InvoiceControl();
         return Inertia::render('staff/Billing/InvoiceBilling', [
             'billing' => $this->mapBillingForInvoice($billing),
-            'logo_url' => asset('assets/logo.png'),
+            'settings' => $settings,
+            // 'logo_url' => asset('assets/logo.png'),
         ]);
     }
 
