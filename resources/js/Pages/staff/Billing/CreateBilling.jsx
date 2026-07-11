@@ -2,8 +2,14 @@ import React from 'react'
 import BillingForm from './BillingForm'
 import StaffLayout from '@/Layouts/StaffLayout'
 
-function CreateBilling() {
-  return <BillingForm mode="create" />
+function CreateBilling({ phoneSettings, deliverySettings }) {
+  return (
+    <BillingForm
+      mode="create"
+      phoneSettings={phoneSettings}
+      deliverySettings={deliverySettings}
+    />
+  )
 }
 
 export default CreateBilling

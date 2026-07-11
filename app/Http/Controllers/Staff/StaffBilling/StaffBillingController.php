@@ -23,7 +23,10 @@ class StaffBillingController extends Controller
 
     public function index(Request $request): Response
     {
-        return Inertia::render('staff/Billing/CreateBilling');
+        return Inertia::render('staff/Billing/CreateBilling', [
+            'phoneSettings' => $this->phoneSettings(),
+            'deliverySettings' => $this->deliverySettings(),
+        ]);
     }
 
     public function view(Request $request): Response
@@ -195,6 +198,7 @@ class StaffBillingController extends Controller
 
         return Inertia::render('staff/Billing/EditBilling', [
             'billing' => $this->mapBillingForForm($billing),
+            'phoneSettings' => $this->phoneSettings(),
         ]);
     }
 
@@ -220,7 +224,7 @@ class StaffBillingController extends Controller
         if (! $request->exists('frames') && ! $request->exists('lenses')) {
             $validated = $request->validate([
                 'customer_name' => ['required', 'string', 'max:255'],
-                'mobile_number' => ['nullable', 'string', 'max:15'],
+                'mobile_number' => $this->mobileNumberRules(),
                 'delivery_date' => ['nullable', 'date'],
             ]);
 
@@ -283,7 +287,7 @@ class StaffBillingController extends Controller
     {
         $validated = $request->validate([
             'customer_name' => ['required', 'string', 'max:255'],
-            'mobile_number' => ['nullable', 'string', 'max:15'],
+            'mobile_number' => $this->mobileNumberRules(),
             'order_date' => ['nullable', 'date'],
             'delivery_date' => ['nullable', 'date', 'after_or_equal:order_date'],
             'discount' => ['nullable', 'numeric', 'min:0'],
@@ -362,6 +366,41 @@ class StaffBillingController extends Controller
             'balance' => $balance,
             'due_carry_amount' => $dueCarryAmount,
             'due_transfer_mobile_number' => $dueTransferMobileNumber,
+        ];
+    }
+
+    private function mobileNumberRules(): array
+    {
+        $phoneSettings = $this->phoneSettings();
+        $required = $phoneSettings['required'];
+        $phoneLength = $phoneSettings['length'];
+
+        $rules = [
+            $required ? 'required' : 'nullable',
+            'digits:'.$phoneLength,
+        ];
+
+        return $rules;
+    }
+
+    private function phoneSettings(): array
+    {
+        $settings = InvoiceControl::first();
+        $required = (bool) ($settings?->staff_check ?? false);
+
+        return [
+            'required' => $required,
+            'length' => $required ? max(1, (int) ($settings?->phone ?? 10)) : 10,
+        ];
+    }
+
+    private function deliverySettings(): array
+    {
+        $settings = InvoiceControl::first();
+
+        return [
+            'enabled' => (bool) ($settings?->auto_delivery ?? false),
+            'days' => (int) ($settings?->delivery_days ?? 1),
         ];
     }
 

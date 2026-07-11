@@ -23,9 +23,9 @@ class BillingController extends Controller
 
     public function index(Request $request): Response
     {
-        return Inertia::render(
-            'admin/Billing/CreateBilling'
-        );
+        return Inertia::render('admin/Billing/CreateBilling', [
+            'phoneSettings' => $this->phoneSettings(),
+        ]);
     }
 
     public function view(Request $request): Response
@@ -194,6 +194,7 @@ class BillingController extends Controller
 
         return Inertia::render('admin/Billing/EditBilling', [
             'billing' => $this->mapBillingForForm($billing),
+            'phoneSettings' => $this->phoneSettings(),
         ]);
     }
 
@@ -250,7 +251,7 @@ class BillingController extends Controller
     {
         $validated = $request->validate([
             'customer_name' => ['required', 'string', 'max:255'],
-            'mobile_number' => ['nullable', 'string', 'max:15'],
+            'mobile_number' => $this->mobileNumberRules(),
             'order_date' => ['nullable', 'date'],
             'delivery_date' => ['nullable', 'date', 'after_or_equal:order_date'],
             'discount' => ['nullable', 'numeric', 'min:0'],
@@ -329,6 +330,29 @@ class BillingController extends Controller
             'balance' => $balance,
             'due_carry_amount' => $dueCarryAmount,
             'due_transfer_mobile_number' => $dueTransferMobileNumber,
+        ];
+    }
+
+    private function mobileNumberRules(): array
+    {
+        $phoneSettings = $this->phoneSettings();
+        $required = $phoneSettings['required'];
+        $phoneLength = $phoneSettings['length'];
+
+        return [
+            $required ? 'required' : 'nullable',
+            'digits:'.$phoneLength,
+        ];
+    }
+
+    private function phoneSettings(): array
+    {
+        $settings = InvoiceControl::first();
+        $required = (bool) ($settings?->admin_check ?? false);
+
+        return [
+            'required' => $required,
+            'length' => $required ? max(1, (int) ($settings?->phone ?? 10)) : 10,
         ];
     }
 

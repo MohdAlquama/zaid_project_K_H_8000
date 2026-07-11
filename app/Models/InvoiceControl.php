@@ -29,5 +29,18 @@ class InvoiceControl extends Model
         'header_line_spacing_top',
         'header_line_spacing_bottom',
         'terms_and_conditions', // Add this line    
+        'admin_check',
+        'staff_check',
+        'phone',
+        'auto_delivery',
+        'delivery_days',
+        'total_display_type',
+    ];
+
+    protected $casts = [
+        'admin_check' => 'boolean',
+        'staff_check' => 'boolean',
+        'auto_delivery' => 'boolean',
+        'delivery_days' => 'integer',
     ];
 }

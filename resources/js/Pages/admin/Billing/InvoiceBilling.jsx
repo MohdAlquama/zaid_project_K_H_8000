@@ -1637,7 +1637,9 @@ function InvoiceBilling({ billing, settings }) {
 
     const items = [...frameItems, ...lensItems];
 
-    const total = billing?.net_total;
+    const total = settings?.total_display_type === "frame_total"
+        ? Number(billing?.frame_total || 0) + Number(billing?.lens_total || 0)
+        : billing?.net_total;
     const discount = billing?.discount;
     const advance = billing?.advance_paid;
     const balance = billing?.balance;

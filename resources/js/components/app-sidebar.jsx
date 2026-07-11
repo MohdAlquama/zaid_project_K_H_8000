@@ -23,6 +23,7 @@ import {
   MessageSquareIcon,
   CalendarDays,
   LogsIcon,
+  Phone,
 } from "lucide-react"
 
 
@@ -69,11 +70,12 @@ const data = {
   title: "User / Staff Management",
   url: "/admin/create__/user/staff",
   icon: UsersIcon,
-},{
+},
+{
 title: "Invoice Settings",
 url: "/admin/invoice-control",
 icon: Settings2,
-}
+},
 
   ],
 
@@ -93,6 +95,11 @@ icon: Settings2,
       name: "Reports",
       url: "/admin/reports",
       icon: ClipboardListIcon,
+    },
+    {
+      name: "Export Contacts",
+      url: "/admin/export-contacts",
+      icon: Phone,
     },
     {
   name: "System Logs",

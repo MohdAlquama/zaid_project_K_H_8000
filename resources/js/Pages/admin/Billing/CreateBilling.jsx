@@ -1,8 +1,8 @@
 import AdminLayout from '@/Layouts/AdminLayout'
 import BillingForm from './BillingForm'
 
-function CreateBilling() {
-  return <BillingForm mode="create" />
+function CreateBilling({ phoneSettings }) {
+  return <BillingForm mode="create" phoneSettings={phoneSettings} />
 }
 
 export default CreateBilling

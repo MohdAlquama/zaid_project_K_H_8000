@@ -151,8 +151,38 @@ const buildFormData = (billing = null) => ({
     : [],
 })
 
-export default function BillingForm({ mode = "create", billing = null }) {
+const normalizePhoneSettings = (phoneSettings = {}) => {
+  const required = Boolean(phoneSettings?.required)
+  const configuredLength = Number.parseInt(phoneSettings?.length, 10)
+  const length = required && configuredLength > 0 ? configuredLength : 10
+
+  return { required, length }
+}
+
+const addDaysToDate = (dateValue, days) => {
+  const [year, month, day] = `${dateValue}`.split('-').map(Number)
+
+  if (!year || !month || !day) {
+    return ""
+  }
+
+  const date = new Date(Date.UTC(year, month - 1, day))
+  date.setUTCDate(date.getUTCDate() + days)
+
+  return date.toISOString().slice(0, 10)
+}
+
+export default function BillingForm({
+  mode = "create",
+  billing = null,
+  phoneSettings = {},
+  deliverySettings = {},
+}) {
   const isEditMode = mode === "edit"
+  const autoDeliveryEnabled = !isEditMode && Boolean(deliverySettings?.enabled)
+  const deliveryDays = Math.min(99, Math.max(0, Number(deliverySettings?.days) || 0))
+  const mobileSettings = normalizePhoneSettings(phoneSettings)
+  const mobilePattern = `[0-9]{${mobileSettings.length}}`
   const initialDueCarryAmount = getDueCarryAmount(buildFormData(billing).frames)
   const { data, setData, post, put, processing, errors, reset } = useForm(
     buildFormData(billing),
@@ -184,6 +214,14 @@ export default function BillingForm({ mode = "create", billing = null }) {
 
     setData('order_date', new Date().toISOString().slice(0, 10))
   }, [data.order_date, isEditMode, setData])
+
+  useEffect(() => {
+    if (!autoDeliveryEnabled || !data.order_date) {
+      return
+    }
+
+    setData('delivery_date', addDaysToDate(data.order_date, deliveryDays))
+  }, [autoDeliveryEnabled, data.order_date, deliveryDays, setData])
 
   useEffect(() => {
     if (!isEditMode || !billing?.created_at) {
@@ -496,9 +534,17 @@ export default function BillingForm({ mode = "create", billing = null }) {
             <Label>Mobile Number</Label>
             <Input
               value={data.mobile_number}
-              onChange={(event) => setData('mobile_number', event.target.value)}
+              onChange={(event) => {
+                const onlyNums = event.target.value
+                  .replace(/[^0-9]/g, '')
+                  .slice(0, mobileSettings.length)
+                setData('mobile_number', onlyNums)
+              }}
               placeholder="Enter mobile number"
-              maxLength={10}
+              maxLength={mobileSettings.length}
+              required={mobileSettings.required}
+              pattern={mobilePattern}
+              title={`Enter exactly ${mobileSettings.length} digits.`}
             />
             <InputError message={errors.mobile_number} />
           </div>

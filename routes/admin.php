@@ -7,8 +7,10 @@ use App\Http\Controllers\Admin\Billing\BillingController;
 use App\Http\Controllers\Admin\InvoiceControlController;
 use App\Http\Controllers\Admin\Session\SystemLogsController;
 use App\Http\Controllers\Admin\UserStaffController;
+use App\Http\Controllers\Admin\ExportPhoneContactsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Pest\Support\Exporter;
 
 Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
@@ -48,4 +50,8 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/invoice-control', [InvoiceControlController::class, 'index'])->name('invoice-control.index');
         Route::post('/invoice-control', [InvoiceControlController::class, 'store'])->name('invoice-control.store');
 
+        //ExportPhoneContacts
+    //    Route::get('/export-phone-contacts', [ExportPhoneContactsController::class, 'index'])->name('export-phone-contacts.index');
+        Route::get('/export-contacts', [ExportPhoneContactsController::class, 'index'])->name('export.contacts.index');
+        Route::post('/export-contacts/download', [ExportPhoneContactsController::class, 'download'])->name('export.contacts.download');
     }); 

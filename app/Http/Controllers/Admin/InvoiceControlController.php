@@ -7,6 +7,7 @@ use App\Models\InvoiceControl;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class InvoiceControlController extends Controller
 {
@@ -29,6 +30,9 @@ class InvoiceControlController extends Controller
             'show_logo' => $request->boolean('show_logo'),
             'vertical_line_show' => $request->boolean('vertical_line_show'),
             'header_line_show' => $request->boolean('header_line_show'),
+            'admin_check' => $request->boolean('admin_check'),
+            'staff_check' => $request->boolean('staff_check'),
+            'auto_delivery' => $request->boolean('auto_delivery'),
         ]);
 
         // 2. Data Validation
@@ -51,6 +55,21 @@ class InvoiceControlController extends Controller
             'header_line_spacing_top' => 'nullable|integer|min:0',
             'header_line_spacing_bottom' => 'nullable|integer|min:0',
             'terms_and_conditions' => 'nullable|string', // Add this line
+            'admin_check' => 'boolean',
+            'staff_check' => 'boolean',
+            'auto_delivery' => 'boolean',
+            'delivery_days' => [
+                Rule::requiredIf(fn () => $request->boolean('auto_delivery')),
+                'nullable',
+                'integer',
+                'between:0,99',
+            ],
+            'total_display_type' => ['required', Rule::in(['net_total', 'frame_total'])],
+            'phone' => [
+                Rule::requiredIf(fn () => $request->boolean('admin_check') || $request->boolean('staff_check')),
+                'nullable',
+                'digits:2',
+            ],
         ]);
 
         $settings = InvoiceControl::first() ?? new InvoiceControl();

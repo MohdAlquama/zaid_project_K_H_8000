@@ -1,8 +1,8 @@
 import StaffLayout from '@/Layouts/StaffLayout'
 import BillingForm from './BillingForm'
 
-function EditBilling({ billing }) {
-  return <BillingForm mode="edit" billing={billing} />
+function EditBilling({ billing, phoneSettings }) {
+  return <BillingForm mode="edit" billing={billing} phoneSettings={phoneSettings} />
 }
 
 export default EditBilling
